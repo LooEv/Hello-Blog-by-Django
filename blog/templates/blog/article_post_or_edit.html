@@ -1,0 +1,144 @@
+{% extends 'blog/blog_base.html' %}
+{% load staticfiles %}
+{% block extra_head %}
+    {#    <link rel="stylesheet" href="//cdn.jsdelivr.net/editor/0.1.0/editor.css">#}
+    {#    <script src="http://cdn.jsdelivr.net/editor/0.1.0/editor.js"></script>#}
+    {#    <script src="http://cdn.jsdelivr.net/editor/0.1.0/marked.js"></script>#}
+
+    <link rel="stylesheet" href="{% static 'blog/editor/editor.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/source/css/myeditor.css' %}">
+    <script src="{% static 'blog/editor/editor.js' %}"></script>
+    <script src="{% static 'blog/editor/marked.js' %}"></script>
+{% endblock %}
+
+{% block extra_title %}
+    {% if '/edit/' in request.path %}
+        编辑文章
+    {% elif '/post/' in request.path %}
+        发表文章
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="container markdown-editor">
+            <div class="row" id="article_div">
+                {% if form.errors %}
+                    <div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>{{form.errors.values.0}}</strong>
+                    </div>
+                {% endif %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>{{ form.non_field_errors.values.0 }}</strong>
+                    </div>
+                {% endif %}
+                <form  action="" class="" method="post" id="article_form">{% csrf_token %}
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            {{ form.article_title }}
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="input-group">
+                            <div class="input-group-addon">{{ blog_data.site_domain }}{{ post_page.article_link }}</div>
+                            <div class="form-group">
+                                {{ form.article_link }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        {{ form.content }}
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form.tags }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form.category }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="pull-right">
+                            <input type="hidden" name="btn_check" id="btn_check" value="0">
+                            <input type="hidden" id="id_status" name="status" value="p">
+                            <input type="hidden" name="article_link_has_changed" id="article_link_has_changed" value="0">
+                            <button type="submit" class="btn btn-success" id="save_to_draft" name="draft" value="草稿">保存为草稿</button>
+                            <button type="submit" class="btn btn-danger" id="post_article" name="post" value="发布">发 布</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="jumbotron">
+                <h2>有一个坏消息</h2>
+                <img src="http://ocf3ikxr2.bkt.clouddn.com/somethingelse/oh-my-godddd.gif" alt="oh my god" class="img-responsive img-rounded">
+                <p style="display: inline-block">你还没登录呢。</p><a href="{% url 'login' %}?next={{ request.get_full_path }}">立即登录</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="panel panel-success" style="width:300px;position:absolute;top:45%;left:45%;display:none;z-index:9999;" id="draft_tip">
+        <div class="panel-heading">
+            <h3 class="panel-title">操作提示{{ request.path }}</h3>
+        </div>
+        <div class="panel-body" id="tip_msg"></div>
+	</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        var editor = new Editor();
+        editor.render();
+
+        $(document).ready(function() {
+            $('#id_category').append("<option value='-1' id='category_custom'>自定义</option>");
+
+            $('#save_to_draft').click( function(){
+                $('#btn_check').val('0');
+                $('#id_status').val('d');
+            });
+            $('#post_article').click( function(){
+                $('#btn_check').val('1');
+                $('#id_status').val('p');
+            });
+
+            {% if '/edit/' in request.path %}
+                var original_article_link = $('#id_article_link').val();
+                var current_article_link = $('#id_article_link').val();
+                var edit_article_url_prefix = '{{ request.path }}'.slice(0, '{{ request.path }}'.lastIndexOf('/') + 1);
+
+                $('#save_to_draft, #post_article').click( function () {
+                    current_article_link = $('#id_article_link').val();
+                    if( original_article_link != current_article_link){
+                        original_article_link = current_article_link;
+                        return confirm('文章的链接已经发生改变，请不要轻易修改文章的链接，尤其是被在搜索引擎收录之后。\n\n请问确定修改吗？');
+                    }
+                });
+                $('#article_form').submit(function (e) {
+                    $.post('', $(this).serialize(), function (data) {
+                        if( $('#btn_check').val() == '1' ){
+                            window.location.href = data.redirect_to_detail;
+                        }
+                        else if( $('#btn_check').val() == '0'){
+                            $('#draft_tip').css('display', 'block').fadeOut(3000);
+                            $('#tip_msg').html(data.message);
+                            window.history.replaceState(null, null, edit_article_url_prefix + current_article_link + '.html');
+                        }
+                    });
+                    e.preventDefault();
+                });
+            {% endif %}
+            {% if post_page.post_to_edit %}
+                $('#draft_tip').css('display', 'block').fadeOut(3000);
+                $('#tip_msg').html('保存成功，进入编辑页面~.~');
+            {% endif %}
+        });
+    </script>
+{% endblock %}

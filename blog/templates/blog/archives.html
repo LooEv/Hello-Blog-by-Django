@@ -1,0 +1,39 @@
+{% extends 'blog/blog_base.html' %}
+
+{% block extra_title %} 归档 {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="my-card">
+            <div style="margin-top: 30px;"></div>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            {% for year, article_list in archives_dict.items %}
+                <div class="panel panel-info">
+                    <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion"
+                               href="#collapse{{ forloop.counter }}"
+                               aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                <span class="glyphicon glyphicon-th-list"></span>&nbsp;{{ year }} 年
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{ forloop.counter }}" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}"
+                    class="panel-collapse collapse {% if forloop.counter == 1 %} in {% endif %}">
+                        <div class="panel-body">
+                            {% if article_list %}
+                                {% include 'blog/include/display_article_list.html' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;"></div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include 'blog/include/delete_article_script.html' %}
+{% endblock %}

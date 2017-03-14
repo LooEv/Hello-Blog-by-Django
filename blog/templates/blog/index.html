@@ -1,0 +1,110 @@
+{% extends 'blog/blog_base.html' %}
+{% load staticfiles %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/solarized-dark.min.css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% for article in article_list %}
+            <article id="article" class="my-card">
+
+                {% include 'blog/include/article_detail_page_header.html' %}
+
+                {% autoescape off %}
+                    {{ article.content_html|truncatewords_html:50 }}
+                {% endautoescape %}
+                <div class="read-more-line"></div>
+                <a href="{% url 'blog:article_detail' article.author article.article_link %}">Read More>></a>
+            </article>
+        {% endfor %}
+
+        <div class="jumbotron" style="display:{% if article_list.start_index %}none{% else %}block{% endif %}">
+            <h1>被发现了。。。</h1>
+            <img src="http://ocf3ikxr2.bkt.clouddn.com/somethingelse/oh-my-godddd.gif" alt="oh my god" class="img-responsive img-rounded">
+            <p style="display:inline;">还没有人写文章，如果你愿意，可以写下第一篇文章！</p>
+            {% if request.user.is_authenticated %}
+                <a role="button" href="{% url 'blog:article_post' %}" class="btn btn-danger">写篇文章</a>
+            {% else %}
+                <a role="button" href="{% url 'login' %}?next={% url 'blog:article_post' %}" class="btn btn-danger">写篇文章</a>
+            {% endif %}
+        </div>
+    </div>
+    <nav class="page-nav" style="{% if not article_list.start_index %} display:none {% endif %}">
+        <ul class="pagination  visible-lg-block visible-md-block">
+            {% if article_list.paginator.num_pages == 1 %}
+                <li class="disabled"><a href="#">&laquo;</a></li>
+                <li><a href="">1</a></li>
+                <li class="disabled"><a href="#">&raquo;</a></li>
+            {% else %}
+                {% if article_list.number == 1 %}
+                    <li class="disabled"><a href="#">&laquo;</a></li>
+                {% else %}
+                    <li><a href="?page={{ article_list.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+
+                {% for num in page_range %}
+                    {% if num == article_list.number %}
+                        <li class="active"><a href="">{{ num }}</a></li>
+                    {% else %}
+                      <li><a href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if article_list.number == article_list.paginator.num_pages %}
+                    <li class="disabled"><a href="">&raquo;</a></li>
+                {% else %}
+                    <li><a href="?page={{ article_list.next_page_number }}">&raquo;</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </nav>
+    <nav class="page-nav2" style="{% if not article_list.start_index %} display:none {% endif %}">
+        <ul class="pager hidden-lg hidden-md">
+            <li>
+                <input type="text" class="page-input" id="page-num" name="page" value="{{ article_list.number }}"
+                       placeholder="{{ article_list.number }}"
+                       onfocus="this.oldValue=this.value;this.value=''"
+                       title="输入页码，可按回车键快速跳转">
+                <p>/ {{ article_list.paginator.num_pages  }}页</p>
+                <button type="submit" id="page-redirect">Go!</button>
+            </li>
+            {% if article_list.has_previous %}
+            <li class="previous"><a href="?page={{ article_list.previous_page_number  }}">上一页</a></li>
+            {% else %}
+            <li class="previous disabled"><a href="">上一页</a></li>
+            {% endif %}
+            {% if article_list.has_next %}
+            <li class="next"><a href="?page={{ article_list.next_page_number  }}">下一页</a></li>
+            {% else %}
+            <li class="next disabled"><a href="">下一页</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+    $(document).ready(function(){
+        function check_page_num(id_page_num) {
+            if( ($(id_page_num).val() != '') && ($(id_page_num).val() != '{{ article_list.number }}') ) {
+                window.location.href = '?page=' + $(id_page_num).val();
+            }
+        }
+
+        $('#page-redirect').click(function(){
+            check_page_num('#page-num');
+        });
+        $('#page-num').keydown(function(event){
+            if(event.keyCode==13) {
+                check_page_num('#page-num');
+            }
+        });
+        
+        $('.hljs').css('color', '#eee');
+    });
+</script>
+{% endblock %}

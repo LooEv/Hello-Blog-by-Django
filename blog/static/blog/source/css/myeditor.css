@@ -1,0 +1,23 @@
+.markdown-editor {
+    color: #000;
+    background-color: #fff;
+    max-width: 900px;
+    padding: 10px 15px 10px;
+    margin-bottom: 30px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 3px 9px rgba(48, 254, 255, 0.9);;
+    box-shadow: 0 0 9px rgba(48, 254, 255, 0.9);;
+}
+
+.markdown-editor form input[type="text"] {
+    border: 1px solid #cc75ca;
+}
+
+.input-group .input-group-addon {
+    background-color: #b9b0bb;
+    padding-right: 3px;
+}
+
+.markdown-editor select.form-control {
+    border: 1px solid #cc75ca;
+}

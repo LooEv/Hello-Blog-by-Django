@@ -1,0 +1,46 @@
+{% extends "blog/blog_base.html" %}
+
+{% block extra_title %}
+    {{ article.article_title }}
+{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/solarized-dark.min.css">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <article class="my-card">
+
+            {% include 'blog/include/article_detail_page_header.html' %}
+
+            {% autoescape off %}
+                {{ article.content_html }}
+            {% endautoescape %}
+
+            <a href="{% url 'blog:download_image' %}">测试下载图片</a>
+
+            <ul class="pager">
+                {% if previous_article %}
+                    <li class="previous"><a href="{% url 'blog:article_detail' previous_article.author previous_article.article_link %}">
+                    <span class="glyphicon glyphicon-chevron-left"></span>{{ previous_article.article_title }}</a></li>
+                {% endif %}
+                {% if next_article %}
+                    <li class="next"><a href="{% url 'blog:article_detail' next_article.author next_article.article_link %}">
+                    {{ next_article.article_title }}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                {% endif %}
+            </ul>
+        </article>
+
+        {% include 'blog/include/duoshuo_comment.html' %}
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        $(document).ready(function(){
+            $('.hljs').css('color', '#eee');
+        });
+    </script>
+{% endblock %}

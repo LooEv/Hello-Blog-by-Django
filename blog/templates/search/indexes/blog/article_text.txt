@@ -1,0 +1,5 @@
+{{ object.article_title }}
+{{ object.tags }}
+{{ object.content_md }}
+{{ object.author }}
+

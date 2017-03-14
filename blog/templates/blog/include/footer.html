@@ -1,0 +1,40 @@
+<footer id="footer">
+    <div class="container" style="max-width: 840px;">
+        <div class="row">
+            <section class="footer-padding">
+                <div class="col-xs-4 col-sm-3 footer-title">
+                    <p>Sitemap</p>
+                    <ul class="footer-list">
+                        <li><a href="{% url 'blog:categories' %}" >分类</a></li>
+                        <li><a href="{% url 'blog:tags' %}" >标签</a></li>
+                        <li><a href="{% url 'blog:about_blog' %}" >关于</a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-4 col-sm-3 footer-title">
+                    <p>Social</p>
+                    <ul class="footer-list">
+                        <li><a href="https://github.com/LooEv" >GitHub</a></li>
+                        <li><a href="/" >Twitter</a></li>
+                        <li><a href="/" >知乎</a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-4 col-sm-3 footer-title">
+                    <p>Links</p>
+                </div>
+                <div class="col-sm-3 hidden-xs footer-title">
+                    <p>微信订阅号</p>
+                </div>
+                <div class="col-xs-12 col-sm col-md col-lg copyright">
+                    &copy;2016 三好先生&nbsp;<a href="http://threehao.com">threehao.com</a>
+                    <span class="glyphicon glyphicon-heart-empty"></span>
+                </div>
+            </section>
+{#            <section>#}
+{#                <div class="col-lg-12 visible-lg footer-padding">基于<strong>Django + Supervisor + uwsgi + Nginx</strong>构建。</div>#}
+{#                <div class="col-lg-12 visible-lg footer-padding">当前在线人数为 {{ blog_data.people_on_line }} 人，总访客数为 1000 人</div>#}
+{#                <div class="col-xs-12 col-sm col-md hidden-lg">基于<strong>Django + Supervisor + uwsgi + Nginx</strong>构建</div>#}
+{#                <div class="col-xs-12 col-sm col-md hidden-lg">当前在线人数为 5 人，总访客数为 1000 人</div>#}
+{#            </section>#}
+        </div>
+    </div>
+</footer>

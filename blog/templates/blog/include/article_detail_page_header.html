@@ -1,0 +1,39 @@
+<h1>
+    {% if request.path == '/' %}
+        <a href="{{ article.get_absolute_url }}">{{ article.article_title }}</a>
+    {% else %}
+        {{ article.article_title }}
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        {% if request.user.username == article.author or request.user.is_staff %}
+            &nbsp;&nbsp;<small><a href="{% url 'blog:article_edit' article.author article.article_link %}">(编辑)</a></small>
+        {% endif %}
+    {% endif %}
+</h1>
+<div class="after-article-title"></div>
+<div class="row">
+    <div class="col-md-5">
+        <p class="pull-left">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            &nbsp;<a href="{{ article.get_author_homepage }}">{{ article.author }}</a>&nbsp;&nbsp;&nbsp;
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="文章阅读量"></span>
+            &times;{{ article.views }}
+        </p>
+    </div>
+    <div class="col-md-4 col-md-offset-3">
+        <p class="pull-right" title="发表日期">
+            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+            {{ article.created_time|date:"Y-m-d" }}
+        </p>
+    </div>
+</div>
+{% for tag in article.tags_split %}
+    <a href="{% url 'blog:tag_filter' tag %}" class="tag-link">
+        <span class="label label-success"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span>&nbsp;&nbsp;{{ tag }}</span>
+    </a>
+{% endfor %}
+{% if duoshuo_comments %}
+    <p class="pull-right small"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp;{{ duoshuo_comments.count }}&nbsp;条评论</p>
+{% else %}
+    <p class="pull-right small"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp;暂无评论</p>
+{% endif %}

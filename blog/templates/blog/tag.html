@@ -1,0 +1,22 @@
+{% extends "blog/blog_base.html" %}
+
+{% block extra_title %} 标签：{{ tag_name }} {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="my-card">
+            <h3 class="tag-name">标签：{{ tag_name }}</h3>
+
+            {% include 'blog/include/display_article_list.html' %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include 'blog/include/delete_article_script.html' %}
+    <script>
+{#  待完善：当某标签下的所有文章被删除后，需要重定向到主页  #}
+    </script>
+{% endblock %}
+

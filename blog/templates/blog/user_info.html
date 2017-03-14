@@ -1,0 +1,80 @@
+{% extends 'blog/blog_base.html' %}
+{% load static %}
+
+
+{% block extra_title %}
+    {{ author.username }} · 个人主页
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="user-info">
+            <div class="user-avatar">
+                <img src="{{ author.avatar.url }}" alt="头像" id="avatar-img" class="img-circle center-block">
+
+                {% if request.user.is_authenticated and request.user.id == author.id %}
+                <img src="{% static 'blog/source/images/shadow_avatar.png' %}" id="avatar-shadow" style="display: none">
+                <form action="{% url 'blog:change_avatar' author.id %}" method="post" enctype="multipart/form-data" id="avatar-form">
+                    {% csrf_token %}
+                <input type="file" title="支持jpg、jpeg、gif、png格式，文件小于5M" name="change_avatar" id="avatar-input"
+                       accept="image/jpg,image/jpeg,image/gif,image/png" data-max-size="5242880">
+                </form>
+                {% endif %}
+            </div>
+            <h3 class="text-info text-center"><strong>{{ author.username }}</strong></h3>
+            <p class="text-info text-center"><strong>当这儿能够被编辑了，说明我已经完成了网站所有功能</strong></p>
+            <p class="text-info text-center"><strong>你知道的，我在开玩笑</strong></p>
+            {% if article_list %}
+                {% include 'blog/include/display_article_list.html' %}
+            {% else %}
+                {% if request.user.is_authenticated and request.user.username == author.username %}
+                    <p class="text-info">您还没写过文章，你可以 <a href="{% url 'blog:article_post' %}">写篇文章</a></p>
+                {% else %}
+                    <p class="text-info">这个作者比较懒，什么都还没有写^.^</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include 'blog/include/delete_article_script.html' %}
+
+    {% if request.user.is_authenticated and request.user.id == author.id %}
+    <script>
+        $('#avatar-input').hover(function () {
+            $('#avatar-shadow').css('display', 'block');
+        }, function () {
+            $('#avatar-shadow').css('display', 'none');
+        });
+
+        $('#avatar-input').change(function () {
+            var fileSize = $(this).get(0).files[0].size; // in bytes
+            var maxSize = $(this).data('max-size');
+            if (fileSize > maxSize) {
+                alert('文件大小超过5M，请重新选择其他图片');
+                return false;
+            }
+            $.ajax({
+                url: "{% url 'blog:change_avatar' author.id %}",
+                type: 'POST',
+                cache: false,
+                data: new FormData($('#avatar-form')[0]),
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    alert(res.msg);
+                    if (res.status == 'OK') {
+                        $('#avatar-img').attr('src', res.img_url);
+                    }
+                },
+                error: function(res) {
+                    alert(res.msg);
+                }
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}
+
+{#待完善：1、用户文章分页；2、编辑个人信息；#}

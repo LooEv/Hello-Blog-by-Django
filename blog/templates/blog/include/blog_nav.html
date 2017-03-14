@@ -1,0 +1,104 @@
+<header class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="/" class="navbar-brand"><strong>Hello Blog</strong></a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="glyphicon glyphicon-align-justify"></span>
+                <b style="color: #d8dbff">MENU</b>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-main">
+            <ul class="nav navbar-nav nav-pills" id="main-menu">
+                <li><a href="/">首页</a></li>
+                <li><a href="{% url 'blog:article_archives' %}">归档</a></li>
+                <li><a href="{% url 'blog:tags' %}" >标签</a></li>
+            {% if blog_data.categories %}
+                <li><a href="{% url 'blog:category_filter' blog_data.categories.0 %}"
+                       class="visible-lg-inline-block visible-xs-inline-block">{{ blog_data.categories.0 }}</a></li>
+                <li class="dropdown hidden-lg hidden-xs">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">分类<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        {% for category in blog_data.categories|slice:'1:' %}
+                            <li><a href="{% url 'blog:category_filter' category %}">{{ category }}</a></li>
+                            {% if not forloop.last %}
+                                <li class="divider"></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% for category in blog_data.categories|slice:'1:' %}
+                    <li><a href="{% url 'blog:category_filter' category %}" class="visible-lg-inline-block visible-xs-inline-block">{{ category }}</a></li>
+                {% endfor %}
+            {% endif %}
+                <li><a href="{% url 'blog:read_books' %}" class="visible-lg-inline-block visible-xs-inline-block">读书</a></li>
+            </ul>
+
+            {% url 'blog:haystack_search' as search_url %}
+            {% if request.path != search_url  %}
+                <form class="navbar-form navbar-left" method="get" action="{{ search_url }}" role="search">
+                    <div class="form-group">
+                        <input type="text" placeholder="Search. . ." name="q" class="form-control">
+                        <button type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </form>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+                <ul class="nav navbar-nav nav-pills navbar-right user-icon">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span><strong>&nbsp;{{ request.user.username }}</strong>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ request.user.get_absolute_url }}">个人中心</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'blog:article_post' %}">发表文章</a></li>
+                            {% if request.user.is_staff and request.user.is_superuser %}
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/admin/">后台管理</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'logout' %}?next={{ request.get_full_path }}" title="退出登录">注销</a></li>
+                </ul>
+            {% else %}
+                <ul class="nav navbar-nav nav-pills navbar-right">
+{#                    <li><a href="" class="navbar-link" data-toggle="modal" data-target="#login-modal">登录</a></li>#}
+
+                    <li><a href="{% url 'login' %}?next={{ request.get_full_path }}" class="navbar-link">登录</a></li>
+                    <li><a href="{% url 'blog:register' %}" class="navbar-link">注册</a></li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<div class="modal fade" id="login-modal" role="dialog" tabindex="-1" aria-labelledby="login-modalLabel" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{% url 'login' %}?next={{ request.get_full_path }}" method="post" id="login-form">{% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">用户登录</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label class="sr-only" for="username">用户名</label>
+                            <input type="text" id="id_username" name="username" placeholder="用户名/手机号码/邮箱" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="password">登录密码</label>
+                            <input type="password" id="id_password" name="password" placeholder="密码" class="form-control">
+                        </div>
+                        <span><a href="{% url 'password_reset' %}">忘记密码</a></span>
+                </div>
+                <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

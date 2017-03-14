@@ -1,0 +1,25 @@
+{% extends 'blog/blog_base.html' %}
+
+{% block extra_title %}
+    联系我们 ·
+{% endblock %}
+
+{% block content %}
+    <div class="container my-card">
+        <h1>联系我们</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.change_avatar }}
+            </p>
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+
+    </div>
+{% endblock %}

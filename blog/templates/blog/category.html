@@ -1,0 +1,21 @@
+{% extends "blog/blog_base.html" %}
+
+{% block extra_title %} 文章分类:{{ category_name }} {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="my-card">
+            <h3 class="category-name">分类：{{ category_name }}</h3>
+
+            {% if article_list %}
+                {% include 'blog/include/display_article_list.html' %}
+            {% else %}
+                <p class="text-info" style="margin-top: 30px">此分类下还没有任何文章，你可以 <a href="{% url 'blog:article_post' %}">写篇文章</a></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include 'blog/include/delete_article_script.html' %}
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'blog/blog_base.html' %}
+{% load highlight %}
+
+{% block extra_title %} 搜索 {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="my-card">
+
+            <div class="my-search-form">
+                <form method="get" action="" class="">
+                <div class="form-group">
+                    <input id="id_q" name="q" class="form-control" type="search" placeholder="Search for..." value="{{ query }}">
+                    <button type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+                </form>
+            </div>
+
+            {% if query|length >= 2 %}
+                <h3>搜索结果：</h3>
+                <div class="collection">
+                    {% for result in page.object_list %}
+                        <div class="collection-item" id="item-{{ forloop.counter }}">
+                            <div>
+                            <a href="{{ result.object.get_absolute_url }}">
+                                {{ result.object.created_time|date:'Y-m-d' }}&nbsp;&nbsp;&nbsp;{{ result.object.article_title }}
+                            </a>
+                            {% if request.user.is_authenticated %}
+                                {% if request.user.username == article.author or request.user.is_staff %}
+                                    <a href="javascript:void(0);" name="{% url 'blog:delete_article' result.object.id %}"
+                                       class="pull-right" id="article-{{ result.object.id }}" title="删除文章">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                    <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
+                                    <a href="{% url 'blog:article_edit' result.object.author result.object.article_link %}"
+                                       class="pull-right" title="编辑文章">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            </div>
+                            {% if query in result.object.content_html %}
+                            <div class="search-content">
+                            {% highlight result.object.content_html with query html_tag "span" css_class "search-highlight" max_length 40 %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-info">没有找到任何相关的内容。</p>
+                    {% endfor %}
+                </div>
+
+                {% if page.has_previous or page.has_next %}
+                    <div>
+                        {% if page.has_previous %}
+                            <a href="?q={{ query }}&page={{ page.previous_page_number }}">
+                        {% endif %}« Previous
+                        {% if page.has_previous %}</a>{% endif %}
+                        |
+                        {% if page.has_next %}
+                            <a href="?q={{ query }}&page={{ page.next_page_number }}">
+                        {% endif %}Next »
+                        {% if page.has_next %}</a>{% endif %}
+                    </div>
+                {% endif %}
+
+            {% elif query|length == 1 %}
+                <p class="text-info">您输入的查询关键字太少了，请重试</p>
+            {% else %}
+                <p class="text-info">请输入查询内容。。。</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

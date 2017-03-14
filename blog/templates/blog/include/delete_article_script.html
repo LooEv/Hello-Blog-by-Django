@@ -1,0 +1,41 @@
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    $('a[id^=article]').click( function () {
+        if (confirm("你确认需要删除这篇文章吗？")) {
+            var parent_div = $(this).parent();
+            var article_link = this.name;
+            $.ajax({
+                type: 'DELETE',
+                url: article_link,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+                },
+                success: function (data) {
+                    if (data.msg == 'success'){
+                        alert('删除成功');
+                        $(parent_div).fadeOut(500);
+                    }
+                    else {
+                        alert('没有相关权限，删除失败');
+                    }
+                },
+                error: function (data) {
+                    alert('删除失败');
+                }
+            })
+        }
+    })
+</script>

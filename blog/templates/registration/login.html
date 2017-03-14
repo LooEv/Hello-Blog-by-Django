@@ -1,0 +1,48 @@
+{% extends "blog/blog_base.html" %}
+
+{% block extra_title %}登录{% endblock %}
+
+{% block content %}
+    {% url 'blog:article_post' as article_post_url %}
+    <div class="container">
+        <div style="max-width: 350px;margin: 80px auto;">
+            {% if form.errors %}
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>用户名或者密码错误，请您重试</strong>
+                </div>
+            {% endif %}
+            {% if next == article_post_url %}
+                <p class="text-danger">您好，登录之后才能发表文章</p>
+            {% endif %}
+            <form method="post" action="{% url 'login' %}">{% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username" class="sr-only">用户名</label>
+                    <input id="id_username" class="form-control" maxlength="50" name="username" type="text"
+                           value="{{ form.username.value|default:"" }}" placeholder="用户名/手机号码/邮箱"/>
+                </div>
+                <div class="form-group">
+                    <label for="id_password" class="sr-only">登录密码</label>
+                    <div class="input-group">
+                        <input id="id_password" class="form-control" maxlength="100" name="password" type="password" placeholder="登录密码"/>
+                        <span class="input-group-addon">
+                            <a href="{% url 'password_reset' %}">忘记密码？</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                    <button type="submit" class="btn btn-info btn-block">立即登录</button>
+                </div>
+            </form>
+            <div class="third-login" style="margin-top: 100px;">
+                <i></i><span style="width: 30%;display: inline-block;text-align: center;">第三方登录</span><i></i>
+                <div class="row">
+                    <div class="col-xs-4"><a href="/" class="btn btn-success" role="button"><span class="glyphicon glyphicon-home"></span></a></div>
+                    <div class="col-xs-4"><a href="/" class="btn btn-success" role="button"><span class="glyphicon glyphicon-record"></span></a></div>
+                    <div class="col-xs-4"><a href="/" class="btn btn-success" role="button"><span class="glyphicon glyphicon-off"></span></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

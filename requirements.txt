@@ -1,0 +1,6 @@
+Django==1.9.2
+Whoosh==2.7.0
+django-haystack==2.6.0
+whitenoise==3.3.0
+jieba==0.38
+markdown

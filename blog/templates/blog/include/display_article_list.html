@@ -1,0 +1,21 @@
+<div class="collection">
+    {% for article in article_list %}
+        <div class="collection-item" id="item-{{ forloop.counter }}">
+            <a href="{{ article.get_absolute_url }}">{{ article.created_time|date:'Y-m-d' }}&nbsp;&nbsp;&nbsp;{{ article.article_title }}
+            {% if article.status == 'd' %}&nbsp;&nbsp;(草稿){% endif %}</a>
+            {% if request.user.is_authenticated %}
+                {% if request.user.username == article.author or request.user.is_staff %}
+                    <a href="javascript:void(0);" name="{% url 'blog:delete_article' article.id %}"
+                       class="pull-right" id="article-{{ article.id }}" title="删除文章">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                    <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
+                    <a href="{% url 'blog:article_edit' article.author article.article_link %}"
+                       class="pull-right" title="编辑文章">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
