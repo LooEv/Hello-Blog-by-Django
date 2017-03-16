@@ -23,5 +23,10 @@ $ python magage.py migrate
 $ python magage.py collectstatic
 $ python manage.py runserver 127.0.0.1:8001
 ```
+### Warning
+需要适当修改 settings.py 文件才能成功运行这个项目，请注意。
+
+
+博客系统正在不断更新中...
 
 网站部署在[pythonanywhere](http://pythonanywhere.com/)上面，这是网站链接[http://fromlooq.pythonanywhere.com/](http://fromlooq.pythonanywhere.com/)
