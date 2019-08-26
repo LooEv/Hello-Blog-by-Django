@@ -19,8 +19,8 @@ $ git clone https://github.com/LooEv/Hello-Blog-by-Django.git
 $ cd Hello-Blog-by-Django
 $ pip install -r requirements.txt
 $ python manage.py makemigrations
-$ python magage.py migrate
-$ python magage.py collectstatic
+$ python manage.py migrate
+$ python manage.py collectstatic
 $ python manage.py runserver 127.0.0.1:8001
 ```
 ### Warning
