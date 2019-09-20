@@ -5,7 +5,7 @@
         {{ article.article_title }}
     {% endif %}
     {% if request.user.is_authenticated %}
-        {% if request.user.username == article.author or request.user.is_staff %}
+        {% if request.user.id == article.author_id or request.user.is_staff %}
             &nbsp;&nbsp;<small><a href="{% url 'blog:article_edit' article.author article.article_link %}">(编辑)</a></small>
         {% endif %}
     {% endif %}

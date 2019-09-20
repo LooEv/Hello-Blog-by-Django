@@ -30,7 +30,6 @@
                     <li><a href="{% url 'blog:category_filter' category %}" class="visible-lg-inline-block visible-xs-inline-block">{{ category }}</a></li>
                 {% endfor %}
             {% endif %}
-                <li><a href="{% url 'blog:read_books' %}" class="visible-lg-inline-block visible-xs-inline-block">读书</a></li>
             </ul>
 
             {% url 'blog:haystack_search' as search_url %}
@@ -58,7 +57,7 @@
                             <li><a href="{% url 'blog:article_post' %}">发表文章</a></li>
                             {% if request.user.is_staff and request.user.is_superuser %}
                                 <li role="separator" class="divider"></li>
-                                <li><a href="/admin/">后台管理</a></li>
+                                <li><a href="{% url 'admin:index' %}">后台管理</a></li>
                             {% endif %}
                         </ul>
                     </li>
@@ -67,8 +66,8 @@
             {% else %}
                 <ul class="nav navbar-nav nav-pills navbar-right">
 {#                    <li><a href="" class="navbar-link" data-toggle="modal" data-target="#login-modal">登录</a></li>#}
-
-                    <li><a href="{% url 'login' %}?next={{ request.get_full_path }}" class="navbar-link">登录</a></li>
+                    {% url 'blog:register' as register_url %}
+                    <li><a href="{% url 'login' %}?next={% if register_url == request.get_full_path %}/{% else %}{{ request.get_full_path }}{% endif %}" class="navbar-link">登录</a></li>
                     <li><a href="{% url 'blog:register' %}" class="navbar-link">注册</a></li>
                 </ul>
             {% endif %}

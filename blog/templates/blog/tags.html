@@ -9,7 +9,7 @@
 
             {% if tag_dict %}
             <div class="tag-cloud">
-                {% for tag_name, size in tag_dict.iteritems %}
+                {% for tag_name, size in tag_dict.items %}
                     <a href="{% url 'blog:tag_filter' tag_name %}" class="size-{{ size }}">{{ tag_name }}</a>
                 {% endfor %}
             </div>

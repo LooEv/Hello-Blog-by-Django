@@ -14,7 +14,7 @@
 
                 {% if request.user.is_authenticated and request.user.id == author.id %}
                 <img src="{% static 'blog/source/images/shadow_avatar.png' %}" id="avatar-shadow" style="display: none">
-                <form action="{% url 'blog:change_avatar' author.id %}" method="post" enctype="multipart/form-data" id="avatar-form">
+                <form action="{% url 'blog:change_avatar' author.username %}" method="post" enctype="multipart/form-data" id="avatar-form">
                     {% csrf_token %}
                 <input type="file" title="支持jpg、jpeg、gif、png格式，文件小于5M" name="change_avatar" id="avatar-input"
                        accept="image/jpg,image/jpeg,image/gif,image/png" data-max-size="5242880">
@@ -56,7 +56,7 @@
                 return false;
             }
             $.ajax({
-                url: "{% url 'blog:change_avatar' author.id %}",
+                url: "{% url 'blog:change_avatar' author.username %}",
                 type: 'POST',
                 cache: false,
                 data: new FormData($('#avatar-form')[0]),

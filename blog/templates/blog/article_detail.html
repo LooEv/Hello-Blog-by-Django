@@ -17,8 +17,6 @@
                 {{ article.content_html }}
             {% endautoescape %}
 
-            <a href="{% url 'blog:download_image' %}">测试下载图片</a>
-
             <ul class="pager">
                 {% if previous_article %}
                     <li class="previous"><a href="{% url 'blog:article_detail' previous_article.author previous_article.article_link %}">
@@ -31,7 +29,7 @@
             </ul>
         </article>
 
-        {% include 'blog/include/duoshuo_comment.html' %}
+{#        {% include 'blog/include/duoshuo_comment.html' %}#}
     </div>
 {% endblock %}
 

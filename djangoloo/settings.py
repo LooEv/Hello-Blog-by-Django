@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''  # 请修改此处
+SECRET_KEY = 'EE3C45C0636A936G6363871F26CC1BCC76D7CA42'  # 请修改此处
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,21 +39,20 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'haystack',
     'blog',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -71,7 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'blog.context_processors.hello_blog',
+                'blog.context_processors.hello_blog_global_settings',
             ],
         },
     },
@@ -125,8 +124,7 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 # LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'zh-cn'
-
+LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -134,7 +132,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -142,7 +140,6 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'djangoloo_static'),
     os.path.join(BASE_DIR, 'media'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -155,19 +152,13 @@ MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'blog.Author'
 
-SITE_ID = 1
-# SITE_DOMAIN = 'http://threehao.com/'
-
-SITE_DOMAIN = 'http://fromlooq.pythonanywhere.com/'
-
-
 ADMINS = (('your_name', 'your_email'),)
 
 DATETIME_FORMAT = 'Y-m-d H:i:s D'
 # DATETIME_INPUT_FORMATS = '%Y-%m-%d %H:%M:%S'
 
 # session 过期时间
-SESSION_COOKIE_AGE = 60 * 10
+SESSION_COOKIE_AGE = 60 * 10  # in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # 发送邮件相关设置
@@ -180,7 +171,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # ------------------------------ 站点配置信息 ------------------------------
 SITE_TITLE = "Hello Blog"
-SITE_SUBTITLE = u'让故事有营养'
+SITE_SUBTITLE = '让故事有营养'
 
 # 多说评论
 DUOSHUO_SHORTNAME = '***'
