@@ -1,11 +1,11 @@
 {% extends "blog/blog_base.html" %}
 
-{% block extra_title %} 文章分类:{{ category_name }} {% endblock %}
+{% block extra_title %} 文章分类: {{ request.resolver_match.kwargs.category_name }} {% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="my-card">
-            <h3 class="category-name">分类：{{ category_name }}</h3>
+            <h3 class="category-name">分类：{{ request.resolver_match.kwargs.category_name }}</h3>
 
             {% if article_list %}
                 {% include 'blog/include/display_article_list.html' %}
