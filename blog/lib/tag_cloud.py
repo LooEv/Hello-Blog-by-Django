@@ -23,6 +23,8 @@ class TagCloud:
             for tag_name in tag_dict.keys():
                 tag_font_size_dict[tag_name] = 4
         else:
+            if len(set(count_list)) == 2:
+                max_font_size, min_font_size = 5, 3
             step = (max_font_size - min_font_size) * 1.0 / (max_tag_count - min_tag_count)
             for tag_name, count in tag_dict.items():
                 font_size = min_font_size + (count - min_tag_count) * step
